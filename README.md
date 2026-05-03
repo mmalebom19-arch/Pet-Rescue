@@ -106,7 +106,7 @@ The SQL Server database includes the following tables:
 ---
 
 ## 📚 Module Context
-Built as part of **INF 214 – Internet Technologies** at the University of Pretoria (2025).
+Built as part of **INF 272 ** at the University of Pretoria (2025).
 
 ---
 
