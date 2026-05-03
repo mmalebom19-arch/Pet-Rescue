@@ -1,0 +1,144 @@
+﻿@{
+    ViewBag.Title = "Pets";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<div class="container mt-5 cloud-bg" style="min-height: 100vh; padding: 40px 20px; border-radius: 0 0 30px 30px;">
+    <div class="text-center mb-5">
+        <h1 class="display-4 mb-3 sparkle-text heavenly-glow">Meet Your Forever Friends</h1>
+        <p class="lead text-muted fs-5">Each soul here is waiting to share their eternal light with you</p>
+    </div>
+
+    <div class="card heavenly-search border-0 shadow-lg mb-5">
+        <div class="card-body p-4">
+            <h5 class="text-primary mb-4 text-center heavenly-glow">Find Your Match</h5>
+            <form method="get" class="row g-3">
+                <div class="col-md-4">
+                    <label class="form-label fw-bold text-primary">Type</label>
+                    <select class="form-select whisper-border" name="Type" id="typeFilter">
+                        <option value="">-- All Our Friendly Creatures --</option>
+                        @foreach (var t in ViewBag.Types)
+                        {
+                            <option>@t</option>
+                        }
+                    </select>
+                </div>
+
+                <div class="col-md-4">
+                    <label class="form-label fw-bold text-primary">Breed</label>
+                    <select class="form-select whisper-border" name="Breed" id="breedFilter">
+                        <option value="">-- All Our Breeds --</option>
+                        @foreach (var b in ViewBag.Breeds)
+                        {
+                            <option>@b</option>
+                        }
+                    </select>
+                </div>
+
+                <div class="col-md-4">
+                    <label class="form-label fw-bold text-primary">Location</label>
+                    <select class="form-select whisper-border" name="Location">
+                        <option value="">-- All Our Realms --</option>
+                        @foreach (var l in ViewBag.Locations)
+                        {
+                            <option>@l</option>
+                        }
+                    </select>
+                </div>
+
+                <div class="col-12 text-center mt-4">
+                    <button class="btn sparkle-btn me-3" type="submit">
+                        Search 
+                    </button>
+                    <a href="@Url.Action("Index", "Pets")" class="btn btn-outline-primary whisper-border">
+                        Clear 
+                    </a>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <div class="row row-cols-1 row-cols-md-3 g-4">
+        @foreach (var pet in ViewBag.Pets)
+        {
+            <div class="col">
+                <div class="card celestial-card h-100 border-0">
+                    <div class="position-relative">
+                        <img src="@Url.Content(pet.ImagePath ?? "/Images/Placeholder.png")" alt="@pet.PetName"
+                             class="card-img-top angel-pet-img" />
+                        <div class="position-absolute top-0 end-0 m-3">
+                            @if (pet.Status == "Available")
+                            {
+                                <span class="available-badge">Available</span>
+                            }
+                            else
+                            {
+                                <span class="adopted-badge">Adopted</span>
+                            }
+                        </div>
+                    </div>
+
+                    <div class="card-body text-center">
+                        <h5 class="card-title text-primary mb-3">@pet.PetName</h5>
+
+                        <div class="pet-details mb-3">
+                            <p class="text-muted small mb-2">
+                                <strong>Breed:</strong> @pet.BreedName<br />
+                                <strong>Realm:</strong> @pet.LocationName<br />
+                                <strong>Age:</strong> @pet.Age years young<br />
+                                <strong>Gender:</strong> @pet.Gender<br />
+                                <strong>Weight:</strong> @pet.Weight kg of love<br />
+                                <strong>Guardian:</strong> @pet.Owner
+                            </p>
+                        </div>
+
+                        <div class="pet-whisper mb-3">
+                            "@pet.PetStory"
+                        </div>
+
+                        @if (pet.Status == "Available")
+                        {
+                            <a href="@Url.Action("Adopt", "Pets", new { id = pet.PetID })"
+                               class="btn celestial-btn w-100">
+                                Adopt This Angel
+                            </a>
+                        }
+                        else
+                        {
+                            <button class="btn btn-outline-secondary w-100" disabled>
+                                Found Their Heaven
+                            </button>
+                        }
+                    </div>
+                </div>
+            </div>
+        }
+    </div>
+
+    @if (ViewBag.Pets == null || ViewBag.Pets.Count == 0)
+    {
+        <div class="text-center py-5">
+            <h4 class="text-muted">The skies are quiet for now...</h4>
+            <p class="text-muted">Check back soon for new arrivals!</p>
+        </div>
+    }
+</div>
+
+@section Scripts {
+    <script>
+        $(document).ready(function () {
+            $('#typeFilter').change(function () {
+                var selectedType = $(this).val();
+                $('#breedFilter').empty().append('<option value="">-- All Our Breeds --</option>');
+
+                if (selectedType) {
+                    $.getJSON('@Url.Action("GetBreedsByType", "Pets")', { typeName: selectedType }, function (breeds) {
+                        $.each(breeds, function (index, breed) {
+                            $('#breedFilter').append($('<option></option>').val(breed).text(breed));
+                        });
+                    });
+                }
+            });
+        });
+    </script>
+}

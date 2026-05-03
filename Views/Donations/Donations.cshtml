@@ -1,0 +1,210 @@
+﻿@{
+    ViewBag.Title = "Donations";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<style>
+    .celestial-progress {
+        background: linear-gradient(135deg, #E3F2FD 0%, #F3F8FF 100%);
+        border-radius: 20px;
+        border: 1px solid rgba(173, 216, 230, 0.3);
+    }
+
+    .heavenly-donate-btn {
+        background: linear-gradient(135deg, #28a745, #20c997);
+        border: none;
+        color: white;
+        border-radius: 20px;
+        padding: 12px 30px;
+        transition: all 0.3s ease;
+    }
+
+        .heavenly-donate-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 25px rgba(40, 167, 69, 0.3);
+        }
+
+    .angelic-table {
+        background: rgba(255, 255, 255, 0.9);
+        border-radius: 15px;
+        overflow: hidden;
+    }
+
+    .starlight-progress {
+        height: 30px;
+        border-radius: 15px;
+        background: rgba(173, 216, 230, 0.2);
+        overflow: hidden;
+    }
+
+        .starlight-progress .progress-bar {
+            background: linear-gradient(45deg, #87CEEB, #B0E0E6, #87CEEB);
+            background-size: 200% 200%;
+            animation: starlightShift 3s ease-in-out infinite;
+            border-radius: 15px;
+            transition: width 0.8s ease-in-out;
+        }
+</style>
+<div class="container mt-5 cloud-bg" style="min-height: 100vh; padding: 40px 20px; border-radius: 0 0 30px 30px;">
+
+    <div class="text-center mb-5">
+        <h1 class="display-4 mb-3 sparkle-text heavenly-glow">Celestial Contributions</h1>
+        <p class="lead text-muted fs-5">Every donation creates another star in our sky of hope</p>
+    </div>
+
+    @if (ViewBag.Message != null)
+    {
+        <div class="alert alert-success text-center heavenly-glow border-0 shadow mb-4">
+            @ViewBag.Message
+        </div>
+    }
+
+    <div class="card celestial-progress border-0 shadow-lg mb-5">
+        <div class="card-body p-5 text-center">
+            <h4 class="text-primary mb-4 heavenly-glow">
+                Our Fundraising Journey
+            </h4>
+
+            <div class="donation-info mb-4">
+                <div class="row justify-content-center">
+                    <div class="col-md-4">
+                        <div class="angelic-stat p-3">
+                            <h3 class="sparkle-text">R@(ViewBag.TotalDonations)</h3>
+                            <p class="text-muted mb-0">Celestial Love Collected</p>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="angelic-stat p-3">
+                            <h3 class="text-primary">R@(ViewBag.DonationGoal)</h3>
+                            <p class="text-muted mb-0">Goal</p>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="angelic-stat p-3">
+                            @if (!ViewBag.GoalReached)
+                            {
+                                <h3 class="text-warning">R@(ViewBag.RemainingAmount)</h3>
+                                <p class="text-muted mb-0">Starlight Still Needed</p>
+                            }
+                            else
+                            {
+                                <h3 class="text-success">Goal Achieved!</h3>
+                                <p class="text-muted mb-0">Heaven is Overflowing</p>
+                            }
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="starlight-progress mb-3" style="max-width: 600px; margin: 0 auto;">
+                <div class="progress-bar @(ViewBag.GoalReached ? "bg-success" : "")"
+                     role="progressbar"
+                     style="width: @(ViewBag.ProgressPercentage)%;"
+                     aria-valuenow="@(ViewBag.ProgressPercentage)"
+                     aria-valuemin="0"
+                     aria-valuemax="100">
+                    <span class="fw-bold">@(Math.Round(ViewBag.ProgressPercentage, 1))%</span>
+                </div>
+            </div>
+
+            @if (!ViewBag.GoalReached)
+            {
+                <p class="text-warning mt-3">
+                    Just <strong>R@(ViewBag.RemainingAmount)</strong> more to reach our celestial goal!
+                </p>
+            }
+            else
+            {
+                <p class="text-success mt-3 heavenly-glow">
+                    Goal achieved! Thank you for filling our skies with hope!
+                </p>
+            }
+        </div>
+    </div>
+
+    <div class="card donation-angel border-0 shadow-lg mb-5">
+        <div class="card-body p-5">
+            <h4 class="text-primary mb-4 text-center heavenly-glow">
+                Make a Celestial Contribution
+            </h4>
+
+            <form method="post" class="row g-4 justify-content-center">
+                <div class="col-md-5">
+                    <label class="form-label fw-bold text-primary">Your Angelic Identity</label>
+                    <select name="User" class="form-select whisper-border" required>
+                        <option value="">-- Choose Your Heavenly Self --</option>
+                        @foreach (var u in ViewBag.Users)
+                        {
+                            <option>@u</option>
+                        }
+                    </select>
+                </div>
+
+                <div class="col-md-5">
+                    <label class="form-label fw-bold text-primary">Amount of Starlight</label>
+                    <div class="input-group">
+                        <span class="input-group-text whisper-border">R</span>
+                        <input type="number" name="Amount" class="form-control whisper-border"
+                               placeholder="How much love can you share?" required />
+                    </div>
+                    <small class="text-muted">Every rand creates ripples of hope in our celestial pond</small>
+                </div>
+
+                <div class="col-12 text-center mt-4">
+                    <button type="submit" class="btn heavenly-donate-btn btn-lg px-5">
+                        Send Heavenly Help
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <div class="card donation-angel border-0 shadow-lg">
+        <div class="card-body p-4">
+            <h4 class="text-primary mb-4 text-center heavenly-glow">
+                Recent Celestial Contributions
+            </h4>
+
+            <div class="table-responsive">
+                <table class="table table-hover angelic-table">
+                    <thead class="table-light">
+                        <tr>
+                            <th class="text-primary">Angel Donor</th>
+                            <th class="text-primary">Starlight Given</th>
+                            <th class="text-primary">Celestial Date</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @if (ViewBag.Donations != null && ViewBag.Donations.Count > 0)
+                        {
+                            foreach (var d in ViewBag.Donations)
+                            {
+                                <tr>
+                                    <td class="fw-bold text-primary">@d.Donor</td>
+                                    <td class="text-success fw-bold">R@(d.Amount)</td>
+                                    <td class="text-muted">@d.Date</td>
+                                </tr>
+                            }
+                        }
+                        else
+                        {
+                            <tr>
+                                <td colspan="3" class="text-center py-4 text-muted">
+                                    The donation skies are quiet...<br />
+                                    <small>Be the first to make a celestial contribution!</small>
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <div class="text-center mt-5">
+        <a href="@Url.Action("Index", "Home")" class="btn btn-outline-primary whisper-border btn-lg">
+            Return Home
+        </a>
+    </div>
+
+</div>

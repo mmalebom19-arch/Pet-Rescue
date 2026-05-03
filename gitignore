@@ -1,0 +1,26 @@
+## Visual Studio / .NET
+.vs/
+bin/
+obj/
+*.user
+*.suo
+*.userosscache
+*.sln.docstates
+
+## Build outputs
+[Dd]ebug/
+[Rr]elease/
+x64/
+x86/
+build/
+
+## NuGet packages (don't upload - too large, auto-restored)
+packages/
+*.nupkg
+
+## OS files
+.DS_Store
+Thumbs.db
+
+## Logs
+*.log

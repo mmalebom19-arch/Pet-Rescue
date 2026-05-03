@@ -1,0 +1,173 @@
+﻿@{
+    ViewBag.Title = "Post a Pet";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<div class="container mt-5 cloud-bg" style="min-height: 100vh; padding: 40px 20px; border-radius: 0 0 30px 30px;">
+    <div class="text-center mb-5">
+        <h1 class="display-4 mb-3 sparkle-text heavenly-glow">Share an Angel with the World</h1>
+        <p class="lead text-muted">Help a forever friend find their forever home</p>
+    </div>
+
+    @if (ViewBag.Message != null)
+    {
+        <div class="alert alert-success text-center heavenly-glow border-0 shadow">
+            @ViewBag.Message
+        </div>
+    }
+
+    <div class="card heavenly-form border-0 shadow-lg">
+        <div class="card-body p-5">
+            <form method="post" enctype="multipart/form-data">
+                <div class="form-section">
+                    <h4 class="text-primary mb-4 heavenly-glow">Guardian</h4>
+                    <div class="row g-3">
+                        <div class="col-md-6">
+                            <label class="form-label fw-bold text-primary">Guardiens" Name</label>
+                            <select name="PostedBy" class="form-select whisper-border" id="userDropdown" required>
+                                <option value="">-- Choose Your Angelic Identity --</option>
+                                @if (ViewBag.Users != null)
+                                {
+                                    foreach (var user in ViewBag.Users)
+                                    {
+                                        <option value="@user.FullName">@user.FullName</option>
+                                    }
+                                }
+                                else
+                                {
+                                    <option value="">-- No Firends registered yet --</option>
+                                }
+                            </select>
+                        </div>
+                        <div class="col-md-6">
+                            <label class="form-label fw-bold text-primary">Communication</label>
+                            <select name="UserPhone" class="form-select whisper-border" id="phoneDropdown" required>
+                                <option value="">-- Select Your Celestial Line --</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="form-section">
+                    <h4 class="text-primary mb-4 heavenly-glow">Angels Details</h4>
+                    <div class="row g-3">
+                        <div class="col-md-6">
+                            <label class="form-label fw-bold text-primary">Angels Name</label>
+                            <input type="text" name="PetName" class="form-control whisper-border"
+                                   placeholder="What shall we call this heavenly being?" required />
+                        </div>
+                        <div class="col-md-6">
+                            <label class="form-label fw-bold text-primary">Angels Type</label>
+                            <select class="form-select whisper-border" name="Type" id="typeFilter" required>
+                                <option value="">-- Select  Type --</option>
+                                @if (ViewBag.Types != null)
+                                {
+                                    foreach (var t in ViewBag.Types)
+                                    {
+                                        <option>@t</option>
+                                    }
+                                }
+                            </select>
+                        </div>
+                        <div class="col-md-6">
+                            <label class="form-label fw-bold text-primary">Angels Breed</label>
+                            <select class="form-select whisper-border" name="Breed" id="breedFilter" required>
+                                <option value="">-- Select Breed --</option>
+                                @if (ViewBag.Breeds != null)
+                                {
+                                    foreach (var b in ViewBag.Breeds)
+                                    {
+                                        <option>@b</option>
+                                    }
+                                }
+                            </select>
+                        </div>
+                        <div class="col-md-6">
+                            <label class="form-label fw-bold text-primary">Current Location</label>
+                            <select class="form-select whisper-border" name="Location" required>
+                                <option value="">-- Select Realm --</option>
+                                @if (ViewBag.Locations != null)
+                                {
+                                    foreach (var l in ViewBag.Locations)
+                                    {
+                                        <option>@l</option>
+                                    }
+                                }
+                            </select>
+                        </div>
+                        <div class="col-md-12">
+                            <label class="form-label fw-bold text-primary">Angels Age</label>
+                            <input type="number" name="Age" class="form-control whisper-border"
+                                   placeholder="Years" min="0" required />
+                        </div>
+                        <div class="col-md-">
+                            <label class="form-label fw-bold text-primary">Angels Weight</label>
+                            <input type="number" name="Weight" class="form-control whisper-border"
+                                   placeholder="kg/lbs" step="0.1" min="0" required />
+                        </div>
+                        <div class="col-md-12">
+                            <label class="form-label fw-bold text-primary">Angels Gender</label>
+                            <select class="form-select whisper-border" name="Gender" required>
+                                <option value="">-- Select Gender --</option>
+                                <option value="Male">Male </option>
+                                <option value="Female">Female </option>
+                            </select>
+                        </div>
+                        <div class="col-12">
+                            <label class="form-label fw-bold text-primary">Celestial Story</label>
+                            <textarea name="PetStory" class="form-control whisper-border" rows="4"
+                                      placeholder="Tell us this angel's heavenly tale... " required></textarea>
+                        </div>
+                        <div class="col-12">
+                            <label class="form-label fw-bold text-primary">Angels Portrait</label>
+                            <input type="file" name="PetImage" class="form-control whisper-border" accept="image/*" required />
+                            <small class="text-muted">Capture their eternal glow (PNG, JPG)</small>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="text-center mt-4">
+                    <button type="submit" class="btn angelic-submit btn-lg">
+                        Send This Angel Home
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+    $(document).ready(function () {
+        var users = @Html.Raw(Json.Encode(ViewBag.Users ?? new List<dynamic>()));
+
+        $('#userDropdown').change(function () {
+            var selectedUser = $(this).val();
+            $('#phoneDropdown').empty().append('<option value="">-- Select Your Celestial Line --</option>');
+
+            if (selectedUser && users) {
+                var user = users.find(function(u) {
+                    return u.FullName === selectedUser;
+                });
+
+                if (user) {
+                    $('#phoneDropdown').append($('<option></option>').val(user.PhoneNumber).text(user.PhoneNumber));
+                }
+            }
+        });
+
+        $('#typeFilter').change(function () {
+            var selectedType = $(this).val();
+            $('#breedFilter').empty().append('<option value="">-- Select Heavenly Breed --</option>');
+
+            if (selectedType) {
+                $.getJSON('@Url.Action("GetBreedsByType", "Pets")', { typeName: selectedType }, function (breeds) {
+                    $.each(breeds, function (index, breed) {
+                        $('#breedFilter').append($('<option></option>').val(breed).text(breed));
+                    });
+                });
+            }
+        });
+    });
+    </script>
+}

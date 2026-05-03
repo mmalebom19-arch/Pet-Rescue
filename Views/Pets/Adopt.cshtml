@@ -1,0 +1,112 @@
+﻿@{
+    ViewBag.Title = "Adopt";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    var pet = ViewBag.Pet;
+}
+
+<div class="container mt-5 cloud-bg" style="min-height: 100vh; padding: 40px 20px; border-radius: 0 0 30px 30px;">
+    <div class="text-center mb-5">
+        <h1 class="display-4 mb-3 sparkle-text heavenly-glow">@pet.PetName</h1>
+        <p class="lead text-muted fs-5">A celestial soul ready to share their heavenly light with you</p>
+    </div>
+
+    <div class="row justify-content-center">
+        <div class="col-lg-10">
+            <div class="card divine-connection border-0 shadow-lg">
+                <div class="row g-0">
+                    <div class="col-md-5">
+                        <img src="@pet.ImagePath" class="img-fluid rounded-start h-100"
+                             style="object-fit: cover; border-radius: 25px 0 0 25px;" alt="@pet.PetName" />
+                    </div>
+
+                    <div class="col-md-7">
+                        <div class="card-body p-5">
+                            <h3 class="card-title text-primary mb-4 heavenly-glow">@pet.PetName</h3>
+
+                            <div class="angelic-stats mb-4">
+                                <p class="text-muted">
+                                    <strong>Current Realm:</strong> @pet.LocationName<br>
+                                    <strong>Celestial Age:</strong> @pet.Age years young<br>
+                                    <strong>Weight of Joy:</strong> @pet.Weight kg<br>
+                                    <strong>Divine Gender:</strong> @pet.Gender
+                                </p>
+                            </div>
+
+                            <div class="pet-whisper mb-4">
+                                "@pet.PetStory"
+                            </div>
+
+                            <hr class="my-4 whisper-border" />
+
+                            <h5 class="mb-4 text-primary heavenly-glow">Create Your Celestial Bond</h5>
+
+                            <form method="post" action="@Url.Action("ProcessAdoption", "Pets")">
+                                <input type="hidden" name="PetID" value="@pet.PetID" />
+
+                                <div class="mb-4">
+                                    <label class="form-label fw-bold text-primary">Choose Your Angelic Self</label>
+                                    <select class="form-select whisper-border" name="UserID" id="userDropdown">
+                                        <option value="">-- Select Your Heavenly Identity --</option>
+                                        @foreach (var user in ViewBag.Users)
+                                        {
+                                            <option value="@user.UserID" data-phone="@user.PhoneNumber">@user.FullName</option>
+                                        }
+                                    </select>
+                                </div>
+
+                                <div class="mb-4">
+                                    <label class="form-label fw-bold text-primary">Celestial Communication Line</label>
+                                    <select class="form-select whisper-border" name="Phone" id="phoneDropdown">
+                                        <option>-- Select Your Divine Connection --</option>
+                                    </select>
+                                </div>
+
+                                <button type="submit" class="btn angelic-bond-btn w-100 py-3">
+                                    Seal This Heavenly Bond
+                                </button>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+        $(document).ready(function () {
+            $('#userDropdown').change(function () {
+                var selectedUserId = $(this).val();
+                var phoneDropdown = $('#phoneDropdown');
+                phoneDropdown.empty().append('<option>-- Select Your Divine Connection --</option>');
+
+                if (selectedUserId) {
+                    var selectedOption = $(this).find('option:selected');
+                    var phoneNumber = selectedOption.data('phone');
+
+                    if (phoneNumber) {
+                        phoneDropdown.append('<option value="' + phoneNumber + '">' + phoneNumber + '</option>');
+                    }
+                }
+            });
+
+            $('form').prepend('<div id="validationAlert" class="alert alert-warning heavenly-glow border-0 d-none" role="alert">Please choose both your angelic identity and celestial connection to create this heavenly bond.</div>');
+
+            $('form').submit(function (e) {
+                var userSelected = $('#userDropdown').val();
+                var phoneSelected = $('#phoneDropdown').val();
+
+                if (!userSelected || userSelected === "" || !phoneSelected || phoneSelected === "-- Select Your Divine Connection --") {
+                    e.preventDefault();
+                    $('#validationAlert').removeClass('d-none');
+                    return false;
+                }
+            });
+
+            $('#userDropdown, #phoneDropdown').change(function () {
+                $('#validationAlert').addClass('d-none');
+            });
+        });
+    </script>
+}
